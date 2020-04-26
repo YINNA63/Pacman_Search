@@ -108,12 +108,17 @@ class GraphSearch(SearchProblem):
     def goalTest(self, state):
         return state in self.goals
 
+    # Find the available actions from the given state
     def getActions(self, state):
         self.expanded_states.append(state)
         actions = []
         successors = self.successors[state]
         for successor in successors:
             actions.append(successor[1])
+        '''
+        for (next_state, action, cost) in successors:
+            actions.append(action)
+        '''
         return actions
 
     def getResult(self, state, action):
