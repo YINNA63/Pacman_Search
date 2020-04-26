@@ -128,33 +128,35 @@ def breadthFirstSearch(problem):
     You are not required to implement this, but you may find it useful for Q5.
     """
     "*** YOUR CODE HERE ***"\
-    # start_state = problem.getStartState()
+    # start_state = problem.getStartState() FIXME why this doesn't work???
+    start_node = Node(problem.getStartState(), None, None, 0)
     visited = []
     queue = util.Queue()
-    queue.push((problem.getStartState(), [])) #use queue to store a node with the information of state status and actions taken to get there
+    queue.push((start_node, [])) #use queue to store a node with the information of state status and actions taken to get there
     while not queue.isEmpty():
 
         #get the first state in the queue
-        state, actions = queue.pop()
+        node, actions = queue.pop()
 
         #check if we have already go through this state
-        if state in visited :
+        if node.state in visited :
             continue
-        visited.append(state)
+        visited.append(node.state)
 
         #if the state is one of the goal states, return action list
-        if problem.goalTest(state) :
+        if problem.goalTest(node.state) :
             return actions
 
         #otherwise, go through all the available successors of the current state and push them into the queue
-        avail_actions = problem.getActions(state)
-        for action in avail_actions :
-            next_state = problem.getResult(state, action)
+        avail_actions = problem.getActions(node.state)
+        for action in avail_actions:
+            next_state = problem.getResult(node.state, action)
             #BE CAREFUL!!!Here we cannot directly use actions.append(action)
             #otherwise, we need to remove action from actions after push operation
             #and since they actually point to the same address, it will also be removed from the action list we just pushed
-            next_actions = actions + [action]       
-            queue.push((next_state, next_actions))
+            next_actions = actions + [action]  
+            next_node = Node(next_state, node, action, problem.getCost(node.state, action))     
+            queue.push((next_node, next_actions))
             
         
     util.raiseNotDefined()
@@ -211,6 +213,8 @@ def depthFirstSearch(problem):
             stack.push((next_state, next_actions))
 
     util.raiseNotDefined()
+
+# def depthLimitedSearch(problem, limit):
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
