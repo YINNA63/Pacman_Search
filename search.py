@@ -189,6 +189,11 @@ def iterativeDeepeningSearch(problem):
 
     """
     "*** YOUR CODE HERE ***"
+    for i in range(0, sys.maxsize):
+        actions = depthLimitedSearch(problem, i)
+        if actions is None:
+            continue
+        return actions
     util.raiseNotDefined()
 
 def depthFirstSearch(problem):
@@ -216,8 +221,37 @@ def depthFirstSearch(problem):
 
     util.raiseNotDefined()
 
-# def depthLimitedSearch(problem, limit):
+#do dfs until depth=limit
+#here we can use len(actions) to count the depth of the current state
+def depthLimitedSearch(problem, limit):
+    
+    visited = []
+    stack = util.Stack()
+    start_node = Node(problem.getStartState(), None, None, 0)
+    stack.push((start_node, []))
+    while not stack.isEmpty():
+        node, actions = stack.pop()
 
+        if len(actions) > limit:
+            continue
+
+        if node.state in visited:
+            continue
+        visited.append(node.state)
+
+        if problem.goalTest(node.state):
+            return actions
+
+        avail_actions = problem.getActions(node.state)
+        for action in avail_actions:
+            next_state = problem.getResult(node.state, action)
+            next_actions = actions + [action]
+            next_node = Node(next_state, node, action, problem.getCost(node.state, action))
+            stack.push((next_node, next_actions))
+
+    return None
+
+    util.raiseNotDefined()
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
