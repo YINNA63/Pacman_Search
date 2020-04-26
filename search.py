@@ -195,22 +195,24 @@ def depthFirstSearch(problem):
     
     visited = []
     stack = util.Stack()
-    stack.push((problem.getStartState(), []))
+    start_node = Node(problem.getStartState(), None, None, 0)
+    stack.push((start_node, []))
     while not stack.isEmpty():
-        state, actions = stack.pop()
+        node, actions = stack.pop()
 
-        if state in visited:
+        if node.state in visited:
             continue
-        visited.append(state)
+        visited.append(node.state)
 
-        if problem.goalTest(state):
+        if problem.goalTest(node.state):
             return actions
 
-        avail_actions = problem.getActions(state)
+        avail_actions = problem.getActions(node.state)
         for action in avail_actions:
-            next_state = problem.getResult(state, action)
+            next_state = problem.getResult(node.state, action)
             next_actions = actions + [action]
-            stack.push((next_state, next_actions))
+            next_node = Node(next_state, node, action, problem.getCost(node.state, action))
+            stack.push((next_node, next_actions))
 
     util.raiseNotDefined()
 
