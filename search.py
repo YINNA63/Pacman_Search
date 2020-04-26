@@ -189,6 +189,30 @@ def iterativeDeepeningSearch(problem):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+def depthFirstSearch(problem):
+    
+    visited = []
+    stack = util.Stack()
+    stack.push((problem.getStartState(), []))
+    while not stack.isEmpty():
+        state, actions = stack.pop()
+
+        if state in visited:
+            continue
+        visited.append(state)
+
+        if problem.goalTest(state):
+            return actions
+
+        avail_actions = problem.getActions(state)
+        for action in avail_actions:
+            next_state = problem.getResult(state, action)
+            next_actions = actions + [action]
+            stack.push((next_state, next_actions))
+
+    util.raiseNotDefined()
+
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
@@ -198,3 +222,4 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 bfs = breadthFirstSearch
 astar = aStarSearch
 ids = iterativeDeepeningSearch
+dfs = depthFirstSearch
