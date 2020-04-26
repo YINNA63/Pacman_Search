@@ -256,7 +256,37 @@ def depthLimitedSearch(problem, limit):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    visited = []
+    pq = util.PriorityQueue()
+    start_node = Node(problem.getStartState(), None, None, 0)
+
+    gn = 0
+    hn = heuristic(start_node.state, problem)
+    pq.push((start_node, []), gn + hn)
+
+    while not pq.isEmpty():
+        item = pq.pop()
+        node = item[0]
+        actions = item[1]
+
+        if node.state in visited:
+            continue
+        visited.append(node.state)
+
+        if problem.goalTest(node.state):
+            return actions
+
+        avail_actions = problem.getActions(node.state)
+        for action in avail_actions:
+            next_state = problem.getResult(node.state, action)
+            next_actions = actions + [action]
+            next_node = Node(next_state, node, action, problem.getCost(node.state, action))
+            gn = problem.getCostOfActions(next_actions)
+            hn = heuristic(next_state, problem)
+            pq.push((next_node, next_actions), gn + hn)
+
     util.raiseNotDefined()
+
 
 # Abbreviations
 bfs = breadthFirstSearch
